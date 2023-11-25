@@ -1,0 +1,26 @@
+pipeline{
+    agent any
+    tools{
+        maven 'maven-3'
+    }
+    stages{
+        stage('git check out'){
+            steps{
+                git 'https://github.com/ravendra89/CI-CD-PIPELINE-PROJECT.git'
+            }
+        }
+       stage('maven build'){
+           steps{
+              sh "mvn clean packages" 
+           }
+        }
+    }
+        post{
+            success{
+                emailext attachLog: true, body: '''Email notification test''', subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!', to: 'ravendra.tiwari75@gmail.com'
+            }
+            failure{
+                emailext attachLog: true, body: '''Email notification test''', subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!', to: 'ravendra.tiwari75@gmail.com'
+            }
+        }
+    }
